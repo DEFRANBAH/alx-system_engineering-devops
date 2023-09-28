@@ -1,0 +1,3 @@
+#!/bin/bash
+(ls -p | tr '\n' ', '; echo) | tr -d '\n'
+
