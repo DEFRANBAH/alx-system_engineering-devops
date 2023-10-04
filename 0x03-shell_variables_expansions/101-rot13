@@ -1,3 +1,2 @@
 #!/bin/bash
-echo ""Everyone is a proponent of strong."" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
-
+echo ""Everyone is a proponent of st:ng."" | tr 'A-Za-z' 'N-ZA-Mn-za-m'
