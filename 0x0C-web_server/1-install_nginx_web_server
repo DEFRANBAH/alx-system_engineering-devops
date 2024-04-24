@@ -2,7 +2,11 @@
 # Install nginx on your web-01 server
 # Nginx should be listening on port 80
 # When querying Nginx at its root / with a GET request (requesting a page) 
-# using curl, it must return a page that contains the string Holberton School
+# using curl, it must return a page that contains the string 'hello world'
+# As an answer file, write a Bash script that configures a new Ubuntu machine to respect above requirements
+# You can’t use systemctl for restarting nginx
+# Using service to restart nginx must work
+# The script must run with no error
 
 apt-get -y update
 apt-get -y install nginx
