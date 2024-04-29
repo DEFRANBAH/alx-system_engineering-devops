@@ -1,20 +1,40 @@
-# Install Nginx web server (w/ Puppet)
-package { 'nginx':
-  ensure => installed,
-}
+#!/usr/bin/env bash
+# Configure server using puppet
 
-file_line { 'aaaaa':
-  ensure => 'present',
-  path   => '/etc/nginx/sites-available/default',
-  after  => 'listen 80 default_server;',
-  line   => 'rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;',
-}
+# defines a Puppet class called nginx_server that 
+#  encapsulates the configuration for the Nginx server.
+class nginx_server {
+  package { 'nginx':
+    ensure => installed,
+  }
 
-file { '/var/www/html/index.html':
-  content => 'Hello World!',
-}
+#  manages the Nginx service.
+  service { 'nginx':
+    ensure => running,
+    enable => true,
+    require => Package['nginx'],
+  }
+# manages the Nginx configuration file located at /etc/nginx/sites-available/default.
+  file { '/etc/nginx/sites-available/default':
+    ensure  => present,
+    content => "
+      server {
+        listen      80 default_server;
+        listen      [::]:80 default_server;
+        root        /var/www/html;
+        index       index.html index.htm;
 
-service { 'nginx':
-  ensure  => running,
-  require => Package['nginx'],
+        location / {
+          return 200 'Hello World!';
+        }
+
+        location /redirect_me {
+          return 301 http://kevinocholah.wixsite.com/2023/;
+        }
+      }
+    ",
+    notify => Service['nginx'],
+  }
 }
+#  includes the nginx_server class, ensuring that it gets applied.
+include nginx_server
