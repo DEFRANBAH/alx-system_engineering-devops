@@ -35,14 +35,18 @@ defaults
 frontend defranbah-http
         bind *:80
         default_backend defranbah-backend
+	http-request add-header X-Forwarded-Proto http
+	acl is_http hdr(Host) -i kevinocholla.tech
+    	redirect scheme https code 301 if !{ ssl_fc } is_http
 
 frontend defranbah-https
         bind *:443 ssl crt /etc/ssl/private/kevinocholla.tech.pem
+	http-request add-header X-Forwarded-Proto https
         default_backend defranbah-backend
 
 backend defranbah-backend
         balance roundrobin
-        redirect scheme https if !{ ssl_fc }
+        redirect scheme https code 301 if !{ ssl_fc }
         server 531641-web-01 100.25.134.238:80 check
         server 531641-web-02 3.86.7.168:80 check
 
